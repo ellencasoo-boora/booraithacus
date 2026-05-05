@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Abril + Maio 2026 — Ithacus & Master Miller · Boora</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --preto:#0d0d0d;--branco:#fafaf7;--cinza:#6b6b6b;--cinza-c:#e8e6e0;--fundo:#f4f2ed;
+  --ouro:#C8972A;--ouro-c:#fef3d0;--verde:#2d6a4f;--verde-c:#d8f3dc;
+  --azul:#1a4971;--azul-c:#dbeafe;--roxo:#6d28d9;--roxo-c:#ede9fe;
+  --laranja:#c2410c;--laranja-c:#ffedd5;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--branco);color:var(--preto);font-size:15px;line-height:1.6}
+
+/* HEADER */
+.header{background:var(--preto);padding:40px 48px 36px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.header-left .tag{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ouro);margin-bottom:8px}
+.header-left h1{font-family:'DM Serif Display',serif;font-size:32px;color:var(--branco);line-height:1.15}
+.header-left h1 em{color:#F2C96B;font-style:italic}
+.header-right{text-align:right;font-size:12px;color:rgba(250,250,247,.4)}
+.header-right strong{color:rgba(250,250,247,.7);display:block;font-size:13px}
+
+/* CONTA TABS */
+.tabs{display:flex;border-bottom:2px solid var(--cinza-c);background:#fff;padding:0 48px}
+.tab{padding:14px 20px;font-size:13px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;color:var(--cinza);transition:.15s;margin-bottom:-2px}
+.tab.active{color:var(--preto);border-bottom-color:var(--ouro)}
+
+/* LAYOUT */
+.conta{display:none;padding:40px 48px}
+.conta.active{display:block}
+.conta-titulo{font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:28px}
+
+/* MESES GRID */
+.meses{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-bottom:40px}
+
+/* COLUNA MES */
+.mes-col{border-radius:14px;overflow:hidden;border:1px solid var(--cinza-c)}
+.mes-header{padding:16px 20px;display:flex;align-items:center;justify-content:space-between}
+.mes-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:600}
+.mes-badge{font-size:11px;padding:3px 10px;border-radius:12px;font-weight:600}
+.mes-body{padding:20px;background:#fff}
+
+/* MARÇO */
+.col-marco .mes-header{background:#f4f2ed}
+.col-marco .mes-label{color:var(--cinza)}
+.col-marco .mes-badge{background:var(--cinza-c);color:var(--cinza)}
+
+/* ABRIL */
+.col-abril .mes-header{background:var(--preto)}
+.col-abril .mes-label{color:#F2C96B}
+.col-abril .mes-badge{background:rgba(200,151,42,.2);color:#F2C96B}
+
+/* MAIO */
+.col-maio .mes-header{background:linear-gradient(135deg,#1a4971,#0d2d4a)}
+.col-maio .mes-label{color:#93c5fd}
+.col-maio .mes-badge{background:rgba(147,197,253,.15);color:#93c5fd}
+
+/* KPI MINI */
+.kpi-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.kpi{background:var(--fundo);border-radius:8px;padding:12px 14px}
+.kpi .k-label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--cinza);font-weight:600}
+.kpi .k-val{font-family:'DM Serif Display',serif;font-size:22px;color:var(--preto);margin-top:2px}
+.kpi .k-sub{font-size:11px;color:var(--cinza);margin-top:1px}
+
+/* BARS */
+.bar-item{margin-bottom:10px}
+.bar-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px}
+.bar-label span:first-child{color:var(--cinza)}
+.bar-label strong{color:var(--preto)}
+.bar-track{height:6px;background:var(--cinza-c);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px}
+
+/* POSTS MAIO */
+.post-card{border:1px solid var(--cinza-c);border-radius:10px;margin-bottom:12px;overflow:hidden}
+.post-head{padding:10px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.post-head:hover{background:var(--fundo)}
+.post-num{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.post-title{font-size:13px;font-weight:600;flex:1}
+.post-tipo{font-size:10px;letter-spacing:1px;text-transform:uppercase;font-weight:600;padding:2px 8px;border-radius:10px}
+.post-arrow{font-size:10px;color:var(--cinza);transition:.2s}
+.post-body{display:none;padding:14px 16px 16px;border-top:1px solid var(--cinza-c);background:var(--fundo)}
+.post-body.open{display:block}
+.post-desc{font-size:13px;color:#333;line-height:1.6;margin-bottom:12px}
+.post-legenda{background:#fff;border:1px solid var(--azul-c);border-radius:8px;padding:12px 14px}
+.post-legenda .leg-title{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--azul);font-weight:700;margin-bottom:6px}
+.post-legenda p{font-size:13px;color:#333;line-height:1.6;white-space:pre-wrap}
+
+/* SEMANA */
+.semana-label{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;color:var(--azul);margin:16px 0 8px;padding:6px 10px;background:var(--azul-c);border-radius:6px;display:inline-block}
+
+/* STATUS MAIO */
+.status-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
+.st-box{border-radius:8px;padding:12px 14px;text-align:center}
+.st-box .st-val{font-family:'DM Serif Display',serif;font-size:24px}
+.st-box .st-lbl{font-size:11px;margin-top:2px}
+.obs-box{background:var(--laranja-c);border:1px solid #fed7aa;border-radius:8px;padding:12px 14px;font-size:13px;color:var(--laranja);margin-top:4px}
+
+/* INSIGHT */
+.insight{border-radius:8px;padding:12px 14px;font-size:13px;margin-bottom:8px;display:flex;gap:8px}
+.insight.ok{background:var(--verde-c);color:var(--verde)}
+.insight.warn{background:var(--ouro-c);color:#92400e}
+.insight.info{background:var(--azul-c);color:var(--azul)}
+
+/* DIVIDER */
+.divider{border:none;border-top:1px solid var(--cinza-c);margin:28px 0}
+
+@media(max-width:900px){
+  .meses{grid-template-columns:1fr}
+  .header,.tabs,.conta{padding-left:20px;padding-right:20px}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="tag">Boora · Relatório</div>
+    <h1>Abril encerrado.<br><em>Maio começa.</em></h1>
+  </div>
+  <div class="header-right">
+    <strong>Ithacus · Master Miller</strong>
+    Março → Abril → Maio 2026
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showConta('ithacus',this)">🫒 Ithacus</div>
+  <div class="tab" onclick="showConta('miller',this)">🏆 The Master Miller</div>
+</div>
+
+<!-- ══════════ ITHACUS ══════════ -->
+<div class="conta active" id="ithacus">
+  <p class="conta-titulo">Ithacus · Acompanhamento Março → Maio 2026</p>
+
+  <div class="meses">
+
+    <!-- MARÇO -->
+    <div class="mes-col col-marco">
+      <div class="mes-header">
+        <span class="mes-label">Março 2026</span>
+        <span class="mes-badge">Encerrado</span>
+      </div>
+      <div class="mes-body">
+        <div class="kpi-row">
+          <div class="kpi"><div class="k-label">Posts</div><div class="k-val">15</div><div class="k-sub">planejados</div></div>
+          <div class="kpi"><div class="k-label">Publicados</div><div class="k-val">3</div><div class="k-sub">20%</div></div>
+          <div class="kpi"><div class="k-label">Views</div><div class="k-val">7.000</div><div class="k-sub">estimado</div></div>
+          <div class="kpi"><div class="k-label">Alcance</div><div class="k-val">924</div><div class="k-sub">orgânico</div></div>
+        </div>
+        <div class="insight warn">⏳ 7 posts ficaram em produção — base para aceleração em abril</div>
+      </div>
+    </div>
+
+    <!-- ABRIL -->
+    <div class="mes-col col-abril">
+      <div class="mes-header">
+        <span class="mes-label">Abril 2026</span>
+        <span class="mes-badge">✓ Concluído</span>
+      </div>
+      <div class="mes-body">
+        <div class="kpi-row">
+          <div class="kpi"><div class="k-label">Visualizações</div><div class="k-val">1.527</div><div class="k-sub">conta (30 dias)</div></div>
+          <div class="kpi"><div class="k-label">Contas alc.</div><div class="k-val">517</div><div class="k-sub">perfis únicos</div></div>
+          <div class="kpi"><div class="k-label">Seguidores</div><div class="k-val">169</div><div class="k-sub">total da conta</div></div>
+          <div class="kpi"><div class="k-label">Visitas perfil</div><div class="k-val">70</div><div class="k-sub">+7 link ext.</div></div>
+        </div>
+        <hr class="divider" style="margin:12px 0">
+        <p style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--cinza);margin-bottom:8px">Por tipo de conteúdo</p>
+        <div class="bar-item">
+          <div class="bar-label"><span>Reels</span><strong>50,1%</strong></div>
+          <div class="bar-track"><div class="bar-fill" style="width:50.1%;background:var(--roxo)"></div></div>
+        </div>
+        <div class="bar-item">
+          <div class="bar-label"><span>Posts</span><strong>47,7%</strong></div>
+          <div class="bar-track"><div class="bar-fill" style="width:47.7%;background:var(--azul)"></div></div>
+        </div>
+        <div class="bar-item">
+          <div class="bar-label"><span>Stories</span><strong>2,1%</strong></div>
+          <div class="bar-track"><div class="bar-fill" style="width:2.1%;background:var(--ouro)"></div></div>
+        </div>
+        <hr class="divider" style="margin:12px 0">
+        <p style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--cinza);margin-bottom:8px">Público</p>
+        <div class="bar-item">
+          <div class="bar-label"><span>Não seguidores</span><strong>51,9%</strong></div>
+          <div class="bar-track"><div class="bar-fill" style="width:51.9%;background:var(--verde)"></div></div>
+        </div>
+        <div class="bar-item">
+          <div class="bar-label"><span>Seguidores</span><strong>48,1%</strong></div>
+          <div class="bar-track"><div class="bar-fill" style="width:48.1%;background:var(--ouro)"></div></div>
+        </div>
+        <hr class="divider" style="margin:12px 0">
+        <div class="insight ok">✓ Reels e Posts quase empatados — diversificação saudável</div>
+        <div class="insight ok">✓ Mais da metade do alcance foi público novo (51,9%)</div>
+        <div class="insight info">📌 Seg é o dia mais ativo — conteúdos fortes neste dia</div>
+      </div>
+    </div>
+
+    <!-- MAIO -->
+    <div class="mes-col col-maio">
+      <div class="mes-header">
+        <span class="mes-label">Maio 2026</span>
+        <span class="mes-badge">Em andamento</span>
+      </div>
+      <div class="mes-body">
+        <div class="status-grid">
+          <div class="st-box" style="background:var(--verde-c)">
+            <div class="st-val" style="color:var(--verde)">6</div>
+            <div class="st-lbl" style="color:var(--verde)">Em aprovação<br>com Ulisses</div>
+          </div>
+          <div class="st-box" style="background:var(--ouro-c)">
+            <div class="st-val" style="color:#92400e">9</div>
+            <div class="st-lbl" style="color:#92400e">Em criação<br>pela equipe</div>
+          </div>
+          <div class="st-box" style="background:var(--azul-c)">
+            <div class="st-val" style="color:var(--azul)">15</div>
+            <div class="st-lbl" style="color:var(--azul)">Total<br>planejado</div>
+          </div>
+        </div>
+        <div class="obs-box">📅 <strong>Entregas em criação:</strong><br>4 conteúdos → até 07/05<br>5 conteúdos → até 09/05</div>
+
+        <hr class="divider">
+
+        <p style="font-size:12px;font-weight:700;color:var(--preto);margin-bottom:12px">📋 Conteúdos para aprovação do Ulisses</p>
+
+        <div class="semana-label">📅 05/05 – 11/05</div>
+
+        <!-- POST 1 -->
+        <div class="post-card">
+          <div class="post-head" onclick="togglePost(this)">
+            <div class="post-num" style="background:var(--verde-c);color:var(--verde)">1</div>
+            <div class="post-title">Quem depende de desconto está posicionado errado</div>
+            <span class="post-tipo" style="background:var(--azul-c);color:var(--azul)">Carrossel</span>
+            <span class="post-arrow">▼</span>
+          </div>
+          <div class="post-body">
+            <p class="post-desc">Provoca reflexão no lojista: quando um negócio precisa baixar preço para vender, o produto não está transmitindo valor. Produto comum gera comparação de preço — produto premium gera escolha. Fecha posicionando o Master Miller como solução que eleva a rentabilidade da gôndola.</p>
+            <div class="post-legenda">
+              <div class="leg-title">💬 Sugestão de legenda</div>
+              <p>Se você precisa oferecer desconto para vender, o problema não é o cliente. É o posicionamento.
+
+Produto comum gera comparação. Produto premium gera escolha.
+
+Quem trabalha com Master Miller não compete por preço — oferece o melhor da gôndola.
+
+👇 Fale com nosso time e descubra como elevar sua vitrine.
+
+#mastermiller #azeiteextravirgem #emporio #gôndola #posicionamentodevalor</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- POST 2 -->
+        <div class="post-card">
+          <div class="post-head" onclick="togglePost(this)">
+            <div class="post-num" style="background:var(--verde-c);color:var(--verde)">2</div>
+            <div class="post-title">O problema nunca foi o prato. É o que você coloca nele.</div>
+            <span class="post-tipo" style="background:var(--roxo-c);color:var(--roxo)">Reels</span>
+            <span class="post-arrow">▼</span>
+          </div>
+          <div class="post-body">
+            <p class="post-desc">Sequência visual impactante: close do azeite escorrendo → prato simples → azeite em câmera lenta transformando o prato → garrafa Master Miller. Texto na tela: <em>"Não acompanha. Transforma."</em> Sem narração obrigatória.</p>
+            <div class="post-legenda">
+              <div class="leg-title">💬 Sugestão de legenda</div>
+              <p>Não acompanha. Transforma.
+
+Um fio de Master Miller muda tudo — a textura, o aroma, a experiência do prato.
+
+Isso é o que acontece quando qualidade encontra a cozinha certa. ✨
+
+#mastermiller #azeiteextravirgem #gastronomia #gourmet #transformação</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- POST 3 -->
+        <div class="post-card">
+          <div class="post-head" onclick="togglePost(this)">
+            <div class="post-num" style="background:var(--verde-c);color:var(--verde)">3</div>
+            <div class="post-title">O seu empório merece um azeite de qualidade</div>
+            <span class="post-tipo" style="background:var(--roxo-c);color:var(--roxo)">Reels</span>
+            <span class="post-arrow">▼</span>
+          </div>
+          <div class="post-body">
+            <p class="post-desc">Narração com voz em off dirigida ao lojista: "Você não perde venda por preço. Perde por mix errado. Quando o seu empório trabalha com produto comum, o cliente compara. Quando trabalha com qualidade, ele escolhe." Finaliza: o azeite certo eleva a percepção da sua loja.</p>
+            <div class="post-legenda">
+              <div class="leg-title">💬 Sugestão de legenda</div>
+              <p>Você não perde venda por preço. Perde por mix errado.
+
+O azeite certo não ocupa espaço na gôndola — ele eleva a percepção do seu empório.
+
+Seu cliente já está procurando qualidade. Mostre que você tem. 🫒
+
+📩 Solicite seu pedido pelo link na bio.
+
+#mastermiller #emporio #azeite #lojadequalidade #gôndola</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="semana-label">📅 12/05 – 18/05</div>
+
+        <!-- POST 4 -->
+        <div class="post-card">
+          <div class="post-head" onclick="togglePost(this)">
+            <div class="post-num" style="background:var(--verde-c);color:var(--verde)">4</div>
+            <div class="post-title">O valor começa na origem</div>
+            <span class="post-tipo" style="background:var(--roxo-c);color:var(--roxo)">Reels</span>
+            <span class="post-arrow">▼</span>
+          </div>
+          <div class="post-body">
+            <p class="post-desc">Reels cinematográfico: oliveiras ao vento → close nas azeitonas → luz natural nas folhas → transição para o azeite sendo servido → prato sofisticado → garrafa Master Miller. Ritmo lento, estética documental premium. Narração: <em>"O que define um azeite não começa na prateleira. Começa na origem."</em></p>
+            <div class="post-legenda">
+              <div class="leg-title">💬 Sugestão de legenda</div>
+              <p>O que define um azeite não começa na prateleira.
+Começa na origem. 🌿
+
+Das oliveiras gregas à sua mesa — cada gota carrega a história de uma terra que domina a arte do azeite há séculos.
+
+Isso é Master Miller. Extra virgem. 0,3% de acidez. Reconhecido 630 vezes.
+
+#mastermiller #origemgrega #extravirgem #azeitedequalidade #premium</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- POST 5 e 6 placeholder -->
+        <div class="obs-box" style="margin-top:8px">
+          ⚠️ <strong>Posts 5 e 6 da semana 12–18/05</strong> ainda estão sendo finalizados. Assim que prontos, enviamos para aprovação.
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ MASTER MILLER ══════════ -->
+<div class="conta" id="miller">
+  <p class="conta-titulo">The Master Miller · Resultados de Abril 2026</p>
+
+  <div class="meses" style="grid-template-columns:1fr 1fr">
+
+    <!-- ABRIL -->
+    <div class="mes-col col-abril">
+      <div class="mes-header">
+        <span class="mes-label">Abril 2026</span>
+        <span class="mes-badge">✓ Concluído</span>
+      </div>
+      <div class="mes-body">
+        <div class="kpi-row">
+          <div class="kpi"><div class="k-label">Visualizações</div><div class="k-val">27.621</div><div class="k-sub">conta (30 dias)</div></div>
+          <div class="kpi"><div class="k-label">Contas alc.</div><div class="k-val">16.087</div><div class="k-sub">perfis únicos</div></div>
+          <div class="kpi"><div class="k-label">Interações</div><div class="k-val">535</div><div class="k-sub">86 contas</div></div>
+          <div class="kpi"><div class="k-label">Seguidores</div><div class="k-val">816</div><div class="k-sub">total da conta</div></div>
+        </div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="k-label">Visitas perfil</div><div class="k-val">106</div><div class="k-sub">+1 link ext.</div></div>
+          <div class="kpi"><div class="k-label">Não seguid.</div><div class="k-val">94,5%</div><div class="k-sub">das views</div></div>
+        </div>
+
+        <hr class="divider" style="margin:14px 0">
+        <p style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--cinza);margin-bottom:8px">Interações por tipo</p>
+        <div class="bar-item">
+          <div class="bar-label"><span>Posts</span><strong>58,4%</strong></div>
+          <div class="bar-track"><div class="bar-fill" style="width:58.4%;background:var(--azul)"></div></div>
+        </div>
+        <div class="bar-item">
+          <div class="bar-label"><span>Reels</span><strong>41%</strong></div>
+          <div class="bar-track"><div class="bar-fill" style="width:41%;background:var(--roxo)"></div></div>
+        </div>
+        <div class="bar-item">
+          <div class="bar-label"><span>Stories</span><strong>0,6%</strong></div>
+          <div class="bar-track"><div class="bar-fill" style="width:0.6%;background:var(--ouro)"></div></div>
+        </div>
+
+        <hr class="divider" style="margin:14px 0">
+        <p style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--cinza);margin-bottom:8px">Views por tipo de conteúdo</p>
+        <div class="bar-item">
+          <div class="bar-label"><span>Posts</span><strong>57,6%</strong></div>
+          <div class="bar-track"><div class="bar-fill" style="width:57.6%;background:var(--azul)"></div></div>
+        </div>
+        <div class="bar-item">
+          <div class="bar-label"><span>Reels</span><strong>32,3%</strong></div>
+          <div class="bar-track"><div class="bar-fill" style="width:32.3%;background:var(--roxo)"></div></div>
+        </div>
+        <div class="bar-item">
+          <div class="bar-label"><span>Stories</span><strong>10%</strong></div>
+          <div class="bar-track"><div class="bar-fill" style="width:10%;background:var(--ouro)"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DESTAQUES + MAIO MILLER -->
+    <div style="display:flex;flex-direction:column;gap:24px">
+      <div class="mes-col" style="border-color:var(--cinza-c)">
+        <div class="mes-header" style="background:var(--fundo)">
+          <span class="mes-label" style="color:var(--cinza)">Destaques de Abril</span>
+        </div>
+        <div class="mes-body">
+          <div class="insight ok">🏆 Post mais visto: <strong>8,6 mil views</strong> em 7 de abril — "Estaremos na Anuga"</div>
+          <div class="insight ok">✓ 94,5% das views vieram de público novo — alcance orgânico sólido</div>
+          <div class="insight ok">✓ Interações 91,8% de seguidores — base engajada</div>
+          <div class="insight info">📌 Segunda-feira é o dia mais ativo da audiência</div>
+          <div class="insight warn">⚠️ Stories representam apenas 10% das views — explorar mais</div>
+        </div>
+      </div>
+
+      <div class="mes-col col-maio">
+        <div class="mes-header">
+          <span class="mes-label">Maio 2026</span>
+          <span class="mes-badge">Em andamento</span>
+        </div>
+        <div class="mes-body">
+          <div class="status-grid">
+            <div class="st-box" style="background:var(--verde-c)">
+              <div class="st-val" style="color:var(--verde)">6</div>
+              <div class="st-lbl" style="color:var(--verde)">Em aprovação<br>com Ulisses</div>
+            </div>
+            <div class="st-box" style="background:var(--ouro-c)">
+              <div class="st-val" style="color:#92400e">9</div>
+              <div class="st-lbl" style="color:#92400e">Em criação<br>pela equipe</div>
+            </div>
+            <div class="st-box" style="background:var(--azul-c)">
+              <div class="st-val" style="color:var(--azul)">15</div>
+              <div class="st-lbl" style="color:var(--azul)">Total<br>planejado</div>
+            </div>
+          </div>
+          <div class="obs-box">📅 <strong>Entregas em criação:</strong><br>4 conteúdos → até 07/05<br>5 conteúdos → até 09/05</div>
+          <hr class="divider" style="margin:14px 0">
+          <p style="font-size:12px;color:var(--cinza)">Os 6 conteúdos em aprovação com Ulisses são os mesmos listados na aba da Ithacus acima (Posts 1–4 + 2 a confirmar). Os 9 em criação seguem o calendário editorial de Master Miller com foco em autoridade e prova social.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function showConta(id, el) {
+  document.querySelectorAll('.conta').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+}
+function togglePost(head) {
+  const body = head.nextElementSibling;
+  const arrow = head.querySelector('.post-arrow');
+  body.classList.toggle('open');
+  arrow.textContent = body.classList.contains('open') ? '▲' : '▼';
+}
+</script>
+</body>
+</html>
